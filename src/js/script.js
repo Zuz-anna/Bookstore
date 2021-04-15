@@ -14,15 +14,11 @@
       filters: '.filters',
     },
 
-    bookImages: {
-      imageWrapper: '.book__image',
-    }
+    bookImage: '.book__image',
   };
-  const className = {
-    bookImages: {
-      wrapperFavorite: 'favorite',
 
-    }
+  const className = {
+    imageFavorite: 'favorite'
   };
   const templates = {
     bookTemplate: Handlebars.compile(document.querySelector(select.templateOf.bookTemplate).innerHTML),
@@ -30,41 +26,61 @@
 
 
   class Books {
-    constructor(id, data){
+    constructor(){
       const thisBooks = this;
 
-      thisBooks.id = id;
-      thisBooks.data = data;
       thisBooks.getElements();
       thisBooks.renderBooks();
       thisBooks.initActions();
-
     };
 
     getElements() {
       const thisBooks = this;
 
       thisBooks.bookList = document.querySelector(select.containerOf.bookList);
+      thisBooks.image = document.querySelector(select.bookImage);
+      thisBooks.favoriteBooks = [];
     };
 
     renderBooks() {
       const thisBooks = this;
 
-      for ( const data of dataSource.books ) {
-        const generateHTML = templates.bookTemplate(data);
+      for ( const book of dataSource.books ) {
+        const generateHTML = templates.bookTemplate(book);
         const generatedDOM = utils.createDOMFromHTML(generateHTML);
-
         thisBooks.bookList.appendChild(generatedDOM);
       };
     };
 
     initActions() {
       const thisBooks = this;
+
+      thisBooks.bookList.addEventListener('dblclick', function(event) {
+        event.preventDefault();
+
+        const clickedElement = event.target.offsetParent;
+
+        if (!clickedElement.classList.contains(select.bookImage)) {
+          const bookId = thisBooks.getAttribute('.data-id');
+
+          if (!clickedElement.classList.contains(className.imageFavorite)) {
+            thisBooks.favoriteBooks.push(bookId);
+            clickedElement.classList.add(className.imageFavorite);
+          }
+          else {
+            thisBooks.favoriteBooks.splice(thisBooks.favoriteBooks.indexOf(bookId), 1);
+            clickedElement.classList.remove(className.favoriteBooks);
+          };
+        };
+      });
     };
-  }
+  };
 
-  const app = new Books();
-
+  const app = {
+    init: function() {
+      new Books();
+    },
+  };
   app.init();
 };
 
