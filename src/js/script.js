@@ -13,29 +13,35 @@
       bookList: '.books-list',
       filters: '.filters',
     },
-  };
 
+    bookImages: {
+      imageWrapper: '.book__image',
+    }
+  };
+  const className = {
+    bookImages: {
+      wrapperFavorite: 'favorite',
+
+    }
+  };
   const templates = {
     bookTemplate: Handlebars.compile(document.querySelector(select.templateOf.bookTemplate).innerHTML),
   };
 
 
-  function render(){
-    for(const data of dataSource.books){
-      /*generate HTML based on template */
-      const bookList = document.querySelector(select.containerOf.bookList);
-      const generateHTML = templates.bookTemplate(data);
+  class Books {
+    constructor(id, data){
+      const thisBooks = this;
 
-      /*create element using utils.createElementFromHTML */
-      const elementHTML = utils.createDOMFromHTML(generateHTML);
+      thisBooks.id = id;
+      thisBooks.data = data;
 
-      /*add element to menu */
-      bookList.appendChild(elementHTML);
-    }
-  }
+      thisBooks.getElements();
+      thisBooks.renderBooks();
+      thisBooks.initActions();
 
-  render();
+    };
 
-}
 
+};
 
