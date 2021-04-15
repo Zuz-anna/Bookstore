@@ -65,11 +65,9 @@
 
         if (!clickedElement.classList.contains(thisBooks.imageWrapper)) {
           const bookId = clickedElement.getAttribute('.data-id');
-
           if (!clickedElement.classList.contains(className.imageFavorite)) {
             thisBooks.favoriteBooks.push(bookId);
             clickedElement.classList.add(className.imageFavorite);}
-
           else {
             thisBooks.favoriteBooks.splice(thisBooks.favoriteBooks.indexOf(bookId), 1);
             clickedElement.classList.remove(className.favoriteBooks);
@@ -85,17 +83,37 @@
         const clickedElement = event.target;
 
         if (clickedElement.tagName === 'INPUT' && clickedElement.type === 'checkbox' && clickedElement.name === 'filter') {
-
           if (clickedElement.checked) {
             thisBooks.filters.push(clickedElement.value);}
-
           else {
             const id = thisBooks.filters.indexOf(clickedElement.value);
             thisBooks.filters.splice(thisBooks.filters.indexOf(id), 1);
           };
         };
-        console.log('filter', clickedElement.value);
+        thisBooks.filterBooks();
       });
+    };
+
+    filterBooks() {
+      const thisBooks = this;
+
+      for ( const hiddenBook of dataSource.books ) {
+        let shouldBeHidden = false;
+
+        for ( const filter of thisBooks.filters) {
+          if (!hiddenBook.details[filter]) {
+            shouldBeHidden = true;
+            break; //przerwanie działania funkcji
+          };
+        };
+        const book = document.querySelector('.book__image[data-id="' + hiddenBook.id + '"]');
+
+        if (shouldBeHidden) {
+          book.classList.add(className.imageHidden);}
+        else {
+          book.classList.remove(className.hidden);
+        };
+      };
     };
   };
 
